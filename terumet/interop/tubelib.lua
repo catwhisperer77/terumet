@@ -3,7 +3,7 @@ if tubelib.version < 2.0 then
     tube = 'tubelib:tube1'
 end
 
-terumet.register_machine_upgrade('tubelib', 'Tube Support Upgrade', {terumet.id('item_upg_base'), tube}, nil, 'simple', 'Allows machine to interface with tubelib tubes', 'Any machine with input/output')
+terumet.register_machine_upgrade('tubelib', 'Tube Support Upgrade', 'Allows machine to interface with tubelib tubes', 'Any machine with input/output', {tube})
 
 local machine_check = function(machine, player_name)
     return machine and terumet.machine.has_upgrade(machine, 'tubelib')
@@ -49,4 +49,4 @@ tubelib.register_node(terumet.id('mach_crusher'), {terumet.id('mach_crusher_lit'
 --tubelib.register_node(terumet.id('mach_meseg'), terumet.EMPTY, TUBELIB_MACHINE_DEF)
 tubelib.register_node(terumet.id('mach_repm'), terumet.EMPTY, TUBELIB_MACHINE_DEF)
 tubelib.register_node(terumet.id('mach_vulcan'), terumet.EMPTY, TUBELIB_MACHINE_DEF)
-
+tubelib.register_node(terumet.id('mach_vcoven'), terumet.EMPTY, TUBELIB_MACHINE_DEF)

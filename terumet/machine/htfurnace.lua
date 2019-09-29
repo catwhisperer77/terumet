@@ -171,6 +171,7 @@ base_htf.unlit_nodedef = base_mach.nodedef{
     -- terumet machine class data
     _terumach_class = {
         name = 'High-Temperature Furnace',
+        valid_upgrades = terumet.valid_upgrade_sets{'input', 'output'},
         timer = 0.5,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.ACCEPT,
@@ -195,7 +196,7 @@ base_mach.define_machine_node(base_htf.unlit_id, base_htf.unlit_nodedef)
 base_mach.define_machine_node(base_htf.lit_id, base_htf.lit_nodedef)
 
 minetest.register_craft{ output = base_htf.unlit_id, recipe = {
-    {terumet.id('item_coil_tcop'), terumet.id('item_coil_tcop'), terumet.id('item_coil_tcop')},
-    {terumet.id('item_ceramic'), terumet.id('frame_tste'), terumet.id('item_ceramic')},
+    {terumet.id('item_ceramic'), 'basic_materials:copper_strip', terumet.id('item_ceramic')},
+    {terumet.id('item_heater_therm'), terumet.id('frame_tste'), terumet.id('item_heater_therm')},
     {terumet.id('item_ceramic'), terumet.id('item_ceramic'), terumet.id('item_ceramic')}
 }}

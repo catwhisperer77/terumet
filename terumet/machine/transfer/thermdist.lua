@@ -57,7 +57,7 @@ function base_tdist.do_processing(tbox, dt)
         return
     end
     -- ignore node in output direction (facing dir)
-    local facing_dir = util3d.FACING_DIRECTION[tbox.facing]
+    local facing_dir = terumet.util3d.FACING_DIRECTION[tbox.facing]
     base_mach.push_heat_adjacent(tbox, opts.HEAT_TRANSFER_RATE, {facing_dir})
     tbox.status_text = "Distributing heat to orange sides"
     tbox.state = base_tdist.STATE.ACTIVE
@@ -102,6 +102,7 @@ base_tdist.nodedef = base_mach.nodedef{
     -- terumet machine class data
     _terumach_class = {
         name = 'Thermal Distributor',
+        valid_upgrades = terumet.valid_upgrade_sets(),
         timer = 1.0,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.ACCEPT,

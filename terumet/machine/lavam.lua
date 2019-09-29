@@ -1,5 +1,4 @@
 local opts = terumet.options.lavam
-local base_opts = terumet.options.machine
 
 local base_mach = terumet.machine
 
@@ -64,7 +63,7 @@ function base_lavam.do_processing(lavam, dt)
         end
     end
     if lavam.state == base_lavam.STATE.DISPENSE then
-        local dispense_pos = util3d.get_relative_pos(lavam.rot, lavam.pos, 'front')
+        local dispense_pos = terumet.util3d.get_relative_pos(lavam.rot, lavam.pos, 'front')
         local dispense_node = minetest.get_node_or_nil(dispense_pos)
         if dispense_node and dispense_node.name == 'air' then
             dispense_node.name = 'default:lava_source'
@@ -144,6 +143,7 @@ base_lavam.unlit_nodedef = base_mach.nodedef{
     -- machine class data
     _terumach_class = {
         name = 'Lava Melter',
+        valid_upgrades = terumet.valid_upgrade_sets{'input'},
         timer = 1.0,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.ACCEPT,
@@ -173,7 +173,7 @@ base_mach.define_machine_node(base_lavam.unlit_id, base_lavam.unlit_nodedef)
 base_mach.define_machine_node(base_lavam.lit_id, base_lavam.lit_nodedef)
 
 minetest.register_craft{ output = base_lavam.unlit_id, recipe = {
-    {terumet.id('item_coil_raw'), terumet.id('item_coil_raw'), terumet.id('item_coil_raw')},
-    {terumet.id('ingot_ttin'), terumet.id('frame_raw'), terumet.id('ingot_ttin')},
-    {terumet.id('ingot_ttin'), 'default:furnace', terumet.id('ingot_ttin')}
+    {terumet.id('ingot_ttin'), terumet.id('item_heater_basic'), terumet.id('ingot_ttin')},
+    {terumet.id('item_heater_basic'), terumet.id('frame_raw'), terumet.id('item_heater_basic')},
+    {terumet.id('ingot_ttin'), terumet.id('item_heater_basic'), terumet.id('ingot_ttin')}
 }}

@@ -44,10 +44,16 @@ local function make_vacfood(item_id)
         })
 
         terumet.register_vacoven_recipe{
-            input=item_id..' 2',
+            input=FMT('%s %d', item_id, options.USED_ITEMS or 1),
             results={vf_id},
             time=4.0
         }
+
+        minetest.register_craft({
+            output=item_id,
+            type="shapeless",
+            recipe={vf_id}
+        })
 
         generated_vacfoods[item_id]=vf_id
     else
@@ -64,10 +70,10 @@ if options.AUTO_GENERATE then
                 blacklisted = terumet.match_group_key(options.BLACKLIST, def)
             end
         end
-        if not blacklisted then
+        if (not blacklisted) and def.on_use then
             local is_food = false
             for group,_ in pairs(def.groups) do
-                if def.on_use and group:match('^food_') then
+                if group:match('^food_') then
                     is_food = true
                     break
                 end
@@ -90,7 +96,7 @@ local old_item_eat = core.do_item_eat
 core.do_item_eat = function(hp_change, replace_with_item, itemstack, ...)
     local def = itemstack:get_definition()
     if def and def._terumet_vacfood then
-        return old_item_eat(hp_change * 3, replace_with_item, itemstack, ...)
+        return old_item_eat(hp_change * options.EFFECT_MULTIPLIER, replace_with_item, itemstack, ...)
     else
         return old_item_eat(hp_change, replace_with_item, itemstack, ...)
     end

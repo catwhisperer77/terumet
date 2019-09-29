@@ -155,6 +155,7 @@ base_vov.unlit_nodedef = base_mach.nodedef{
     -- terumet machine class data
     _terumach_class = {
         name = 'Vacuum Oven',
+        valid_upgrades = terumet.valid_upgrade_sets{'input', 'output'},
         timer = 0.5,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.ACCEPT,
@@ -166,7 +167,7 @@ base_vov.unlit_nodedef = base_mach.nodedef{
 base_mach.define_machine_node(base_vov.unlit_id, base_vov.unlit_nodedef)
 
 minetest.register_craft{ output = base_vov.unlit_id, recipe = {
-    {terumet.id('item_coil_tgol'), terumet.id('item_coil_tgol'), terumet.id('item_coil_tgol')},
-    {terumet.id('item_ceramic'), terumet.id('frame_cgls'), terumet.id('item_ceramic')},
-    {terumet.id('item_ceramic'), terumet.id('item_ceramic'), terumet.id('item_ceramic')}
+    {'basic_materials:motor', terumet.id('ingot_tcha'), 'basic_materials:motor'},
+    {terumet.id('item_heater_array'), terumet.id('frame_cgls'), terumet.id('item_heater_array')},
+    {terumet.id('block_ceramic'),  terumet.id('ingot_tcha'), terumet.id('block_ceramic')}
 }}

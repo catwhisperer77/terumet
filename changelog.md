@@ -1,6 +1,27 @@
 ## Terumetal mod changelog
 Newer versions listed first
 
+## Version 3.2
+* Terumet now depends on VanessaE's **basic_materials** mod and integrates many of its materials and recipes with it.
+    * It can be found through the Minetest Content Server or downloaded [here](https://gitlab.com/VanessaE/basic_materials)
+    * The Expansion Crusher now makes basic_materials Oil Extract from leaves rather than Biomatter.
+    * The Alloy Smelter can now create Brass (if moreores is also active)
+    * Creating coke lumps from coal via the Vacuum Oven also results in Oil Extract as well.
+* Many old recipes have been updated to include items from basic_materials.
+* All machine upgrade recipes have been modified and are now shapeless.
+* A fully optional **Texture Pack** is provided with the mod to retexture most of the basic_materials items to look more Terumetal-style
+    * To use it:
+        1. Copy/move the "terubasmat" folder inside basic_materials_texturepack to your Minetest textures folder
+        2. Then, activate the texture pack under the "Content" tab in Minetest
+    * Additionally, if you wish to use this texture pack for everyone on a server, you can copy the contents of the texture pack folder into the mod's "textures" folder as well.
+
+## Version 3.1
+* Renamed Concrete Mix/Blocks to Sandcrete Mix/Blocks to differentiate it from other mods' concrete.
+* Machines will now only accept upgrades that apply to that machine.
+* For balance, vacuum-packed food changed by default to only use 1 item and provide 1.5x effect.
+    * These settings were added to options.lua where they can be changed freely.
+* Various minor oversights fixed.
+
 # Version 3.0
 * **MAJOR VERSION CHANGE**: ALL MACHINE FUNCTIONALITY IS NOW SCALED PER SECOND RATHER THAN PER TICK. -- MOST IMPORTANTLY: **HEAT COSTS**
     * This is way overdue, especially since Minetest 5.0 seems to not call node ticks as uniformly as it used to.

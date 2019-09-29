@@ -175,6 +175,7 @@ base_crs.unlit_nodedef = base_mach.nodedef{
     -- machine class data
     _terumach_class = {
         name = 'Expansion Crusher',
+        valid_upgrades = terumet.valid_upgrade_sets{'input', 'output'},
         timer = 1.0,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.ACCEPT,
@@ -199,6 +200,6 @@ base_mach.define_machine_node(base_crs.lit_id, base_crs.lit_nodedef)
 
 minetest.register_craft{ output = base_crs.unlit_id, recipe = {
     {terumet.id('item_coil_tcop'), terumet.id('item_press'), terumet.id('item_coil_tcop')},
-    {terumet.id('ingot_tcha'), terumet.id('frame_raw'), terumet.id('ingot_tcha')},
+    {'basic_materials:steel_strip', terumet.id('frame_raw'), 'basic_materials:steel_strip'},
     {terumet.id('item_coil_tcop'), terumet.id('item_press'), terumet.id('item_coil_tcop')}
 }}

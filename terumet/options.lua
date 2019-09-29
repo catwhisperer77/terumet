@@ -177,7 +177,7 @@ terumet.options.crusher = {
         ['default:apple']='terumet:item_dust_bio 2',
         ['default:papyrus']='terumet:item_dust_bio 3',
         ['group:flora']='terumet:item_dust_bio',
-        ['group:leaves']='terumet:item_dust_bio',
+        ['group:leaves']='basic_materials:oil_extract',
         ['group:sapling']='terumet:item_dust_bio',
         ['group:tree']='terumet:item_dust_wood 4',
         ['group:wood']='terumet:item_dust_wood 1',
@@ -258,8 +258,8 @@ terumet.options.smelter = {
     -- Standard Bronze
     -- Note these are first in the recipe list to override single terucopper/terutin if all elements for bronze are available
         {result='default:bronze_ingot 9', flux=0, time=8.0, input={'default:copper_lump 8', 'default:tin_lump'}},
-        {result='default:bronze_ingot 9', flux=0, time=6.0, input={'default:copper_ingot 8', 'default:tin_ingot'}},
-        {result='default:bronzeblock 9', flux=0, time=40.5, input={'default:copperblock 8', 'default:tinblock'}},
+        {result='default:bronze_ingot 9', flux=0, time=4.0, input={'default:copper_ingot 8', 'default:tin_ingot'}},
+        {result='default:bronzeblock 9', flux=0, time=40.0, input={'default:copperblock 8', 'default:tinblock'}},
         {result='default:bronze_ingot 9', flux=0, time=2.0, input={'terumet:item_cryst_copper 8', 'terumet:item_cryst_tin'}},
     -- Terumetal Glass
         {result='terumet:block_tglass 4', flux=1, time=8.0, input={'default:glass 4', 'default:silver_sand'}},
@@ -324,12 +324,16 @@ terumet.options.vac_oven = {
     COOK_HUPS = 500,
 
     recipes = {
-        {results={'terumet:item_tarball 4', 'terumet:item_coke'}, time=10.0, input='default:coal_lump'},
-        {results={'terumet:item_tarball 40', 'terumet:block_coke'}, time=80.0, input='default:coalblock'},
+        {results={'terumet:item_tarball 4', 'terumet:item_coke', 'basic_materials:oil_extract 4'}, time=10.0, input='default:coal_lump'},
+        {results={'terumet:item_tarball 40', 'terumet:block_coke', 'basic_materials:oil_extract 40'}, time=80.0, input='default:coalblock'},
     },
 
     VAC_FOOD = {
         ACTIVE = true,  -- make false to disable vacuum-packed food entirely
+        -- number of items from a stack used to make one(1) vacuum-packed version
+        PACKED_ITEMS = 1,
+        -- multiplier applied to healing/stamina effect of a vacuum-packed food over its non-packed type
+        EFFECT_MULTIPLIER = 1.5,
         -- if AUTO_GENERATE is true, the mod scans all items defined as of this mod's initialization
         -- if an item has an on_use and has the group food_*, it is assumed to be a food and adds a vacuum-packed version
         -- to ensure a mod's items are scanned, it should be added to terumet's list of dependent mods in mod.conf/depends.txt
@@ -354,7 +358,7 @@ terumet.options.vac_oven = {
         -- see interop/extra.lua for foods from "extra" mod
     },
 
-    MAX_RESULTS = 2, -- Maximum number of result items from recipes (adjust this if any larger recipes are added)
+    MAX_RESULTS = 4, -- Maximum number of result items from recipes (adjust this if any larger recipes are added)
 }
 
 terumet.options.vulcan = {
@@ -465,6 +469,8 @@ terumet.options.ore_saw = {
         ['default:stone_with_coal']=1,
         ['terumet:ore_raw']=1,
         ['terumet:ore_raw_desert']=1,
+        ['terumet:ore_dense_raw']=1,
+        ['terumet:ore_raw_desert_dense']=1,
         ['asteroid:copperore']=1,
         ['asteroid:diamondore']=1,
         ['asteroid:goldore']=1,

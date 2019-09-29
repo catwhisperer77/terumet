@@ -1,5 +1,5 @@
 local opts = terumet.options.heater.entropy
--- local base_opts = terumet.options.machine
+local util3d = terumet.util3d
 
 local base_mach = terumet.machine
 
@@ -119,6 +119,8 @@ function ent_htr.do_processing(machine, dt)
     else
         local gain = math.floor(machine.heat_rate * dt)
         --if gain == 0 then return end -- no longer necessary?
+        if base_mach.has_upgrade(machine, 'gen_up') then gain = math.floor(gain * 1.5) end
+
         local under_cap = machine.heat_level < (machine.max_heat - gain)
         if machine.state == ent_htr.STATE.DRAIN_FULL and under_cap then
             machine.state = ent_htr.STATE.DRAINING
@@ -179,6 +181,7 @@ ent_htr.nodedef = base_mach.nodedef{
     -- terumet machine class data
     _terumach_class = {
         name = 'Environmental Entropy Extraction Heater',
+        valid_upgrades = terumet.valid_upgrade_sets{'heater'},
         timer = 0.5,
         fsdef = FSDEF,
         default_heat_xfer = base_mach.HEAT_XFER_MODE.PROVIDE_ONLY,
@@ -205,7 +208,7 @@ ent_htr.nodedef = base_mach.nodedef{
 base_mach.define_machine_node(ent_htr.id, ent_htr.nodedef)
 
 minetest.register_craft{ output = ent_htr.id, recipe = {
-    {terumet.id('item_upg_gen_up'), terumet.id('item_htglass'), terumet.id('item_upg_gen_up')},
+    {'basic_materials:energy_crystal_simple', terumet.id('item_htglass'), 'basic_materials:energy_crystal_simple'},
     {terumet.id('item_entropy'), terumet.id('frame_cgls'), terumet.id('item_entropy')},
-    {terumet.id('block_ceramic'), terumet.id('item_entropy'), terumet.id('block_ceramic')}
+    {'basic_materials:energy_crystal_simple', terumet.id('mach_thermobox'), 'basic_materials:energy_crystal_simple'}
 }}

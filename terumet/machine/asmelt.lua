@@ -232,6 +232,7 @@ base_asm.unlit_nodedef = base_mach.nodedef{
     -- machine class data
     _terumach_class = {
         name = 'Terumetal Alloy Smelter',
+        valid_upgrades = terumet.valid_upgrade_sets{'input', 'output'},
         timer = 0.5,
         -- NEW
         fsdef = FSDEF,
@@ -266,7 +267,7 @@ base_mach.define_machine_node(base_asm.unlit_id, base_asm.unlit_nodedef)
 base_mach.define_machine_node(base_asm.lit_id, base_asm.lit_nodedef)
 
 minetest.register_craft{ output = base_asm.unlit_id, recipe = {
-    {terumet.id('item_coil_raw'), terumet.id('item_coil_raw'), terumet.id('item_coil_raw')},
-    {'bucket:bucket_empty', terumet.id('frame_raw'), 'bucket:bucket_empty'},
-    {'default:furnace', 'default:furnace', 'default:furnace'}
+    {'bucket:bucket_empty', terumet.id('item_heater_basic'), 'bucket:bucket_empty'},
+    {terumet.id('item_coil_raw'), terumet.id('frame_raw'), terumet.id('item_coil_raw')},
+    {'basic_materials:copper_strip', 'basic_materials:copper_strip', 'basic_materials:copper_strip'}
 }}

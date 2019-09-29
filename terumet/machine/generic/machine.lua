@@ -3,6 +3,7 @@ terumet.machine = {}
 local base_mach = terumet.machine
 local opts = terumet.options.machine
 local FMT = string.format
+local util3d = terumet.util3d
 
 local on_machine_node_creation_callbacks = {}
 -- define a new callback for machine node creation (for interop)
@@ -95,10 +96,10 @@ local SMOKE_ANIMATION = {
 -- CRAFTING MATERIALS
 --
 
-function base_mach.register_frame(id, name, craft_item, center_item)
+function base_mach.register_frame(id, name, xinfo, craft_item, center_item)
     -- added and modified from https://github.com/Terumoc/terumet/pull/1 by RSL-Redstonier - thanks!
     minetest.register_node(terumet.id(id), {
-        description = name,
+        description = terumet.description(name, xinfo),
         tiles = {terumet.tex(id)},
         drawtype = "nodebox",
         node_box = {
@@ -129,9 +130,9 @@ function base_mach.register_frame(id, name, craft_item, center_item)
     })
 end
 
-base_mach.register_frame('frame_raw', 'Terumetal Machine Frame\nFoundation of simple Terumetal machinery', 'ingot_raw', 'default:copperblock')
-base_mach.register_frame('frame_tste', 'Terusteel Machine Frame\nFoundation of advanced Terumetal machinery', 'ingot_tste', terumet.id('item_thermese'))
-base_mach.register_frame('frame_cgls', 'Coreglass Machine Frame\nFoundation of highly advanced Terumetal machinery', 'ingot_cgls', terumet.id('mach_thermobox'))
+base_mach.register_frame('frame_raw', 'Terumetal Machine Frame', 'Foundation of simple Terumetal machinery', 'ingot_raw', terumet.id('item_heater_basic'))
+base_mach.register_frame('frame_tste', 'Terusteel Machine Frame', 'Foundation of advanced Terumetal machinery', 'ingot_tste', terumet.id('item_heater_therm'))
+base_mach.register_frame('frame_cgls', 'Coreglass Machine Frame', 'Foundation of highly advanced Terumetal machinery', 'ingot_cgls', terumet.id('item_heater_array'))
 
 --
 -- GENERIC FORMSPECS
@@ -250,20 +251,27 @@ local function write_side_options(machine)
     machine.meta:set_int('side_options', sideopts_to_value(machine.input_side, machine.output_side))
 end
 
-function base_mach.read_state(pos)
+-- returns basic machine data from node at position (node data, class)
+-- returns nil if node isn't loaded, isn't defined, or is not a terumet machine
+function base_mach.get_machine_at(pos)
     local machine = {}
-    local node_info = minetest.get_node_or_nil(pos)
-    if not node_info then return nil end -- unloaded
-    machine.nodedef = minetest.registered_nodes[node_info.name]
+    machine.node = minetest.get_node_or_nil(pos)
+    if not machine.node then return nil end
+    machine.nodedef = minetest.registered_nodes[machine.node.name]
     if not machine.nodedef then return nil end
     machine.class = machine.nodedef._terumach_class
-    if not machine.class then return nil end -- not a terumetal machine
+    return machine
+end
+
+function base_mach.read_state(pos)
+    local machine = base_mach.get_machine_at(pos)
+    if not (machine and machine.class) then return nil end
     local meta = minetest.get_meta(pos)
     machine.pos = pos
     machine.meta = meta
     machine.owner = meta:get_string('owner')
-    machine.facing = util3d.param2_to_facing(node_info.param2)
-    machine.rot = util3d.param2_to_rotation(node_info.param2)
+    machine.facing = util3d.param2_to_facing(machine.node.param2)
+    machine.rot = util3d.param2_to_rotation(machine.node.param2)
     machine.inv = meta:get_inventory()
     machine.heat_level = meta:get_int('heat_level') or 0
     machine.max_heat = meta:get_int('max_heat') or 0
@@ -292,13 +300,9 @@ end
 -- return simplified list of data of a machine at a specific position
 -- intended to be used outside of the machine's tick loop (external nodes)
 function base_mach.readonly_state(pos)
-    local machine = {}
+    local machine = base_mach.get_machine_at(pos)
+    if not (machine and machine.class) then return nil end
     local meta = minetest.get_meta(pos)
-    local node_info = minetest.get_node_or_nil(pos)
-    if not node_info then return nil end -- unloaded
-    machine.nodedef = minetest.registered_nodes[node_info.name]
-    machine.class = machine.nodedef._terumach_class
-    if not machine.class then return nil end -- not a terumetal machine
     machine.heat_xfer_mode = meta:get_int('heat_xfer_mode') or machine.class.default_heat_xfer
     machine.pos = pos
     machine.meta = meta
@@ -911,8 +915,10 @@ function base_mach.allow_put(pos, listname, index, stack, player)
     elseif listname == 'upgrade' then
         -- deny insert immediately if target upgrade slot is not empty
         if not minetest.get_meta(pos):get_inventory():get_stack(listname, index):is_empty() then return 0 end
-        -- only allow upgrade items into upgrade slot
-        if stack:get_definition()._terumach_upgrade_id then
+        local upgrade_type = stack:get_definition()._terumach_upgrade_id
+        local machine = base_mach.get_machine_at(pos)
+        local machine_class = machine.class
+        if upgrade_type and machine and machine_class.valid_upgrades and machine_class.valid_upgrades[upgrade_type] then
             return 1
         end
         return 0
